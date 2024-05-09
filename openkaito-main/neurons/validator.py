@@ -135,7 +135,8 @@ class Validator(BaseValidatorNeuron):
         - Updating the scores
         """
         try:
-            miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
+            # miner_uids = get_random_uids(self, k=self.config.neuron.sample_size)
+            miner_uids = [73]
 
             random_number = random.random()
             # mixed tasks, deprecated SearchSynapse
