@@ -55,6 +55,13 @@ class Evaluator:
         # quick integrity check and get spot_check_id_dict
         utcnow = datetime.now(timezone.utc)
         for i, response in enumerate(responses):
+            if response is None or not response:
+                zero_score_mask[i] = 0
+                continue
+
+            miner_uid = response['uid']
+            bt.logging.info(f"MINER UID: {miner_uid}")
+
             try:
                 if response is None or not response or len(response) > size:
                     zero_score_mask[i] = 0
