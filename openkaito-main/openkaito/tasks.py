@@ -6,10 +6,16 @@ import openai
 from datetime import datetime, timedelta
 from traceback import print_exception
 from dotenv import load_dotenv
+import logging
 
 import bittensor as bt
 
-from .protocol import SortType, StructuredSearchSynapse, SemanticSearchSynapse
+from .protocol import (
+    DiscordSearchSynapse,
+    SortType,
+    StructuredSearchSynapse,
+    SemanticSearchSynapse,
+)
 from .utils.version import get_version
 
 
@@ -168,7 +174,6 @@ def generate_question_from_eth_denver_segments(llm_client, segments):
         bt.logging.debug(print_exception(type(e), e, e.__traceback__))
 
 
-
 def generate_semantic_search_task(
     query_string: str,
     index_name: str = "eth_denver",
@@ -187,6 +192,37 @@ def generate_semantic_search_task(
         size=size,
         version=version,
     )
+
+
+def generate_discord_search_task(
+    query_string: str,
+    index_name: str = "discord",
+    channel_ids: list = None,
+    author_usernames: list = None,
+    earlier_than_timestamp: int = None,
+    later_than_timestamp: int = None,
+    size: int = 5,
+    version: str = None,
+) -> DiscordSearchSynapse:
+    """
+    Generates a semantic search task for the validator to send to the miner.
+    """
+    if version is None:
+        version = get_version()
+
+    task = DiscordSearchSynapse(
+        query_string=query_string,
+        index_name=index_name,
+        channel_ids=channel_ids,
+        author_usernames=author_usernames,
+        earlier_than_timestamp=earlier_than_timestamp,
+        later_than_timestamp=later_than_timestamp,
+        size=size,
+        version=version,
+    )
+
+    logging.info(f"Generated DiscordSearchTask: {task}")
+    return task
 
 
 def find_repo(path):
